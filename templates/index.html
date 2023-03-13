@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MNIST Digit Recognizer</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      h1 {
+        text-align: center;
+      }
+      form {
+        margin: 0 auto;
+        text-align: center;
+        max-width: 400px;
+      }
+      input[type=file] {
+        display: block;
+        margin: 20px auto;
+      }
+      input[type=submit] {
+        display: block;
+        margin: 20px auto;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      #prediction {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MNIST Digit Recognizer</h1>
+
+    <form id="upload-form" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <input type="button" value="Predict" onclick="predictDigit()">
+    </form>
+
+    <div id="prediction"></div>
+
+    <script>
+      const predictionElement = document.getElementById('prediction');
+
+      function predictDigit() {
+        const formData = new FormData(document.getElementById('upload-form'));
+
+        fetch('{{ url_for("predict") }}', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          const prediction = data.prediction;
+          predictionElement.textContent = `The predicted digit is ${prediction}`;
+        });
+      }
+    </script>
+  </body>
+</html>
